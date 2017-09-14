@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import factory.DaoFactory;
 import bean.User;
+import factory.DaoFactory;
 
 public class SignupServlet extends HttpServlet {
 
@@ -88,10 +88,8 @@ public class SignupServlet extends HttpServlet {
 		try {
 			user = DaoFactory.getUserService().selectUser(uid, Integer.parseInt(kind));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -105,7 +103,7 @@ public class SignupServlet extends HttpServlet {
 			try {
 				flag = DaoFactory.getUserService().insertUser(user);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
