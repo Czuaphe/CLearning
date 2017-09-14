@@ -57,7 +57,24 @@ public class UserImpl implements UserDao {
 		}
 		return list;
 	}
-
+	
+	@Override
+	public List<User> selectUserByKind(int kind) throws Exception {
+		List<User> list = new ArrayList<>();
+		String sql = "select * from user where kind = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, kind);
+		ResultSet rs = pstmt.executeQuery();
+		while(rs.next()){
+			String uid = rs.getString("uid");
+			String name = rs.getString("name");
+			String class_ = rs.getString("class");
+			String pswd = rs.getString("pswd");
+			list.add(new User(uid,name,pswd,kind,class_));
+		}
+		return list;
+	}
+	
 	@Override
 	public boolean insertUser(User user) throws Exception {
 		
@@ -87,5 +104,7 @@ public class UserImpl implements UserDao {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
 
 }

@@ -29,6 +29,11 @@
     <servlet-name>TestBeforeServlet</servlet-name>
     <servlet-class>servlet.TestBeforeServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ClassServlet</servlet-name>
+    <servlet-class>servlet.ClassServlet</servlet-class>
+  </servlet>
+
 
   <servlet-mapping>
     <servlet-name>KnowledgeServlet</servlet-name>
@@ -53,6 +58,10 @@
   <servlet-mapping>
     <servlet-name>TestBeforeServlet</servlet-name>
     <url-pattern>/TestBeforeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ClassServlet</servlet-name>
+    <url-pattern>/ClassServlet</url-pattern>
   </servlet-mapping>
 
 	<welcome-file-list>

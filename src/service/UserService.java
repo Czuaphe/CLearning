@@ -44,4 +44,10 @@ public class UserService implements UserDao{
 		return userImpl.deleteUser(user);
 	}
 
+	@Override
+	public List<User> selectUserByKind(int kind) throws Exception {
+		
+		return userImpl.selectUserByKind(kind);
+	}
+
 }

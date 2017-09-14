@@ -12,7 +12,7 @@ public interface UserDao {
 
 	public List<User> selectUserByClass(String class_) throws Exception;
 	
-	
+	public List<User> selectUserByKind(int kind) throws Exception;
 	
 	public boolean insertUser(User user) throws Exception;
 	

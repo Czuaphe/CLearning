@@ -1,4 +1,5 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"
+	import="java.util.*, factory.DaoFactory, bean.*" pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -46,6 +47,14 @@
 		<div class="tab-content">
 			<!--content1-->
 			<!-- 分班管理的主页面 -->
+			<%
+				// 找到所有的老师
+				List<User> list_teachers = DaoFactory.getUserService()
+						.selectUserByKind(2);
+				// 找到所有的学生
+				List<User> list_students = DaoFactory.getUserService()
+						.selectUserByKind(1);
+			%>
 			<div class="tab-pane fade in active row" id="content1">
 				<!--  -->
 				<div class="col-md-12" style="margin-top: 40px;;">
@@ -60,7 +69,7 @@
 							<li class=""><a href="#demo" data-toggle="tab">14070642</a></li>
 							<li class=""><a href="#demo" data-toggle="tab">14060241</a></li>
 							<li class=""><a href="#demo" data-toggle="tab">13060844</a></li>
-							<li class=""><a href="#demo1" data-toggle="tab"><b>添加班级</b></a></li>
+							<li class=""><a href="#addClass" data-toggle="tab"><b>添加班级</b></a></li>
 						</ul>
 					</div>
 					<!-- 右栏显示班级的详细信息 -->
@@ -78,47 +87,62 @@
 							</div>
 						</div>
 						<!-- 特殊右栏-添加班级的页面 -->
-						<div class="panel panel-default tab-pane fade" id="demo1"
+						<div class="panel panel-default tab-pane fade" id="addClass"
 							style="float:left; width:650px;margin-left:50px;">
 							<div class="panel-heading">
 								<h3 class="panel-title">添加班级</h3>
 							</div>
 							<div class="panel-body" style="">
-								<form class="form-horizontal" role="form">
+								<form class="form-horizontal" role="form" method="post" action="ClassServlet?Method=insert">
 									<div class="form-group">
 										<label for="firstname" class="col-sm-2 control-label">班级名称</label>
 										<div class="col-sm-10">
-											<input type="text" class="form-control" id="firstname"
+											<input type="text" class="form-control" id="className" name="className"
 												placeholder="请输入班级名称">
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="lastname" class="col-sm-2 control-label">选择老师</label>
 										<div class="col-sm-10">
-											<select class="form-control">
-												<option>teacher1</option>
-												<option>teacher2</option>
-												<option>teacher3</option>
+											<select class="form-control" name="classTeacher" id="classTeacher">
+												<%
+													for (int i = 0; i < list_teachers.size(); i++) {
+														if (list_teachers.get(i).getClass_() == null) {
+												%>
+												<option value="<%=list_teachers.get(i).getUid() %>"><%=list_teachers.get(i).getName() + "-"
+							+ list_teachers.get(i).getUid()%></option>
+												<%
+													}
+													}
+												%>
 											</select>
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="lastname" class="col-sm-2 control-label">选择学生</label>
 										<div class="col-sm-10">
-											<div class="">
-												<label class="checkbox-inline"> <input
-													type="checkbox" id="inlineCheckbox1" value="option1">
-													1407064220-张三
-												</label> <label class="checkbox-inline"> <input
-													type="checkbox" id="inlineCheckbox2" value="option2">
-													李四-1407034113
-												</label>
-											</div>
+											<%
+												for (int i = 0; i < list_students.size(); i++) {
+													if (list_students.get(i).getClass_() == null) {
+											%>
+											<label class="checkbox"
+												style="float:left;margin-left:30px;width:130px;"> <input
+												type="checkbox" id="classStudents" name="classStudents[]" value="<%=list_students.get(i).getUid() %> ">
+												<%=list_students.get(i).getName() + "-" + list_students.get(i).getUid()%>
+											</label>
+											<%
+													}
+												}
+											%>
+
 										</div>
 									</div>
 									<div class="form-group">
-										<div class="col-sm-offset-2 col-sm-10">
-											<button type="submit" class="btn btn-default">登录</button>
+										<div class="col-sm-offset-8 col-md-4">
+											<button type="button" class="btn btn-defult"
+												style="float:left;">清空</button>
+											<button type="submit" class="btn btn-primary"
+												style="float:left;margin-left:20px;">添加</button>
 										</div>
 									</div>
 								</form>
