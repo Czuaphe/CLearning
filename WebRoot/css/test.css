@@ -1,0 +1,36 @@
+*{
+    margin:0 auto;
+    padding: 0;
+}
+body{
+    padding-top: 70px;
+}
+
+.mytab{
+	width:300px;
+	height:300px;
+	position:fixed;
+	top:500px;
+	left:0;
+	
+}
+
+.panel-heading-font{
+    font-size: 30px;
+    height:70px;
+    padding-top:15px;
+}
+.panel-body-font{
+    height:100px;
+    padding-top: 55px;
+    font-size: 20px;
+}
+.list-group-item-height{
+    height:auto;
+}
+.list-group-item-li{
+    height:auto;
+    border-top: none;
+    border-bottom:none;
+}
+

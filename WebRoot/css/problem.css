@@ -1,0 +1,52 @@
+
+body {
+	padding-top: 70px;
+}
+.ul-list{
+    width:100%;
+}
+ul.progress-ul{
+    list-style-type: none;
+}
+a{
+    text-decoration: none;
+}
+.list-li{
+    height:50px;
+    font-size: 20px;
+    text-align: center;
+    font-style:normal;
+    font-weight: lighter;
+}
+.way-select{
+    width:40%;
+    height:40px;
+    background-color:rgb(92,184,92);
+    color: white;
+    text-align: center;
+    padding-left: 10px;
+}
+.table-th{
+    font-size: 20px;
+    width: 50px;
+    height: 30px;
+    padding:10px;
+    text-align: center;
+}
+.table-td{
+    width: 50px;
+    height:30px;
+    padding:10px;
+    font-size: 20px;
+    text-align: center;
+}
+.table-head-left{
+    width:50%;
+}
+.table-head-other{
+    width:25%;
+}
+.td-a{
+    text-decoration: none;
+    color: #0f0f0f;
+}

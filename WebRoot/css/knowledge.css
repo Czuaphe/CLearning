@@ -1,0 +1,27 @@
+*{
+    margin:0 auto;
+    padding: 0;
+}
+body{
+    padding-top: 70px;
+}
+.all{
+    width: 1000px;
+    height: 300px;
+}
+.menu{
+    width: 250px;
+    padding-right: 10px;
+    float: left;
+    border-right:1px solid lightgray;
+    color: black;
+}
+.content{
+    width: 730px;
+    height: 300px;
+    padding: 30px;
+    float: left;
+}
+.content p{
+    font-size: 18px;
+}
