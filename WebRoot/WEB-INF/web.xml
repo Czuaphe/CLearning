@@ -3,58 +3,33 @@
 <web-app>
 	<display-name>Project Name</display-name>
 
-	<servlet>
-		<servlet-name>action</servlet-name>
-		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-	
-		<init-param>
-			<param-name>config</param-name>
-			<param-value>/WEB-INF/struts-config.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>debug</param-name>
-			<param-value>2</param-value>
-		</init-param>
-		<init-param>
-			<param-name>detail</param-name>
-			<param-value>2</param-value>
-		</init-param>
-
-		<load-on-startup>2</load-on-startup>
-	</servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>KnowledgeServlet</servlet-name>
     <servlet-class>servlet.KnowledgeServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>ExitServlet</servlet-name>
     <servlet-class>servlet.ExitServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>SignupServlet</servlet-name>
     <servlet-class>servlet.SignupServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>TestServlet</servlet-name>
     <servlet-class>servlet.TestServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>This is the description of my J2EE component</description>
-    <display-name>This is the display name of my J2EE component</display-name>
+
     <servlet-name>TestBeforeServlet</servlet-name>
     <servlet-class>servlet.TestBeforeServlet</servlet-class>
   </servlet>
@@ -65,10 +40,7 @@
 
 
 
-	<servlet-mapping>
-		<servlet-name>action</servlet-name>
-		<url-pattern>*.do</url-pattern>
-	</servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>KnowledgeServlet</servlet-name>
     <url-pattern>/KnowledgeServlet</url-pattern>
@@ -98,33 +70,5 @@
 		<welcome-file>/index.jsp</welcome-file>
 	</welcome-file-list>
 
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-html.tld</taglib-location>
-	</taglib>
 
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
-	</taglib>
-
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
-	</taglib>
-	
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-tiles.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-tiles.tld</taglib-location>
-	</taglib>
-
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-nested.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-nested.tld</taglib-location>
-	</taglib>
-	
-	<taglib>
-		<taglib-uri>/WEB-INF/struts-template.tld</taglib-uri>
-		<taglib-location>/WEB-INF/struts-template.tld</taglib-location>
-	</taglib>
 </web-app>
