@@ -76,9 +76,9 @@
 				<li><a href="problem.jsp">题库</a></li>
 				
 				<%		if(status != null && (status.equals("Success") || status.equals("Normal"))&& user != null) { %>
-				
+				<%			if(user.getKind() == 1) { %>
 				<li><a href="test_before.jsp">测试</a></li>
-				
+				<%			} %>
 				<%		} %>
 				
 			</ul>
