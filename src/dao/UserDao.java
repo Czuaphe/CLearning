@@ -9,6 +9,8 @@ public interface UserDao {
 	public User selectUser(String uid, int level) throws Exception;
 	
 	public List<User> selectAllUser() throws Exception;
+
+	public List<User> selectUserByClass(String class_) throws Exception;
 	
 	public boolean insertUser(User user) throws Exception;
 	

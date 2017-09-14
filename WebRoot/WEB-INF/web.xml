@@ -2,19 +2,15 @@
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <web-app>
 	<display-name>Project Name</display-name>
-
   <servlet>
-
     <servlet-name>KnowledgeServlet</servlet-name>
     <servlet-class>servlet.KnowledgeServlet</servlet-class>
   </servlet>
   <servlet>
-
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
   <servlet>
-
     <servlet-name>ExitServlet</servlet-name>
     <servlet-class>servlet.ExitServlet</servlet-class>
   </servlet>
@@ -33,13 +29,6 @@
     <servlet-name>TestBeforeServlet</servlet-name>
     <servlet-class>servlet.TestBeforeServlet</servlet-class>
   </servlet>
-
-
-
-
-
-
-
 
   <servlet-mapping>
     <servlet-name>KnowledgeServlet</servlet-name>

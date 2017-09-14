@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import bean.User;
@@ -38,6 +39,23 @@ public class UserImpl implements UserDao {
 	public List<User> selectAllUser() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<User> selectUserByClass(String class_) throws Exception {
+		List<User> list = new ArrayList<>();
+		String sql = "select * from user where class = ? && kind =1";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1,class_);
+		ResultSet rs = pstmt.executeQuery();
+		while(rs.next()){
+			String uid = rs.getString("uid");
+			String name = rs.getString("name");
+			int kind = rs.getInt("kind");
+			String pswd = rs.getString("pswd");
+			list.add(new User(uid,name,pswd,kind,class_));
+		}
+		return list;
 	}
 
 	@Override

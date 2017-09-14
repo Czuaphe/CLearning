@@ -20,6 +20,7 @@ public class User {
 		this(uid, name, pswd, kind);
 		this.class_ = class_;
 	}
+
 	
 	public String getUid() {
 		return uid;
