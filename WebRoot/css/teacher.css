@@ -1,0 +1,16 @@
+.panel-heading-style {
+    font-size: 20px;
+}
+tr{height:50px;
+
+    text-align:center;
+    font-size:20px;
+}
+th{
+    text-align: center;
+    font-size: 20px;
+    font-weight: lighter;
+}
+.progress-ul{
+    list-style-type: none;
+}

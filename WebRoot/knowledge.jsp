@@ -39,7 +39,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div class="all">
     <div class="menu">
         <ul class="nav nav-pills nav-stacked">
-            <li class=""><a href="<%="#Chapter_0_0" %>" data-toggle="tab"><b><%=list.get(0).getTitle() %></b></a></li>
+            <li class="">
+                <a href="<%="#Chapter_0_0" %>" data-toggle="tab">
+                    <b><%=list.get(0).getTitle() %></b>
+                </a>
+            </li>
            
  			<!-- 循环输出目录开始 -->
             <%	for(int i = 1; i < list.size(); i ++) { %>

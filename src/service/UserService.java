@@ -24,6 +24,11 @@ public class UserService implements UserDao{
 	}
 
 	@Override
+	public List<User> selectUserByClass(String class_) throws Exception {
+		return userImpl.selectUserByClass(class_);
+	}
+
+	@Override
 	public boolean insertUser(User user) throws Exception {
 		
 		return userImpl.insertUser(user);

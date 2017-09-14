@@ -2,8 +2,8 @@ package bean;
 
 public class TestContent {
 	int cid;
-	int tid;
-	int pid;
+	int tid;  //测试
+	int pid;   //题目
 	int your_option;
 	
 	public TestContent() {}
