@@ -39,7 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         List<User> userList = DaoFactory.getUserService().selectUserByClass(user.getClass_());
   %>
   <div class="row">
-      <ul class="nav nav-tabs col-md-8 col-md-offset-2" id="myTab">
+      <ul class="nav nav-tabs col-md-6 col-md-offset-3" id="myTab">
           <li class="active">
               <a data-toggle="tab" href="#content1">按班级查看</a>
           </li>
@@ -47,7 +47,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               <a data-toggle="tab" href="#content2">按章节查看</a>
           </li>
       </ul>
-      <div class="col-md-8 col-md-offset-2 tab-content" id="myTabContent">
+      <div class="col-md-6 col-md-offset-3 tab-content" id="myTabContent">
           <!--按班级查看-->
           <div class="tab-pane fade in active" id="content1">
               <div class="panel panel-primary" style="margin-top: 40px">
