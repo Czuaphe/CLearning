@@ -42,16 +42,16 @@ public class UserImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> selectUserByClass(String class_) throws Exception {
+	public List<User> selectUserByClassAndKind(String class_, int kind) throws Exception {
 		List<User> list = new ArrayList<>();
-		String sql = "select * from user where class = ? && kind =1";
+		String sql = "select * from user where class = ? && kind = ?";
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1,class_);
+		pstmt.setInt(2, kind);
 		ResultSet rs = pstmt.executeQuery();
 		while(rs.next()){
 			String uid = rs.getString("uid");
 			String name = rs.getString("name");
-			int kind = rs.getInt("kind");
 			String pswd = rs.getString("pswd");
 			list.add(new User(uid,name,pswd,kind,class_));
 		}

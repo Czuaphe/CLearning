@@ -67,7 +67,7 @@
 						</div>
 						<ul class="nav nav-pills nav-stacked" style="text-align:center;">
 							<%	for(int i = 0; i < list_teachers.size(); i ++) { %>
-							<%		if(list_teachers.get(i).getClass_() != null) { %>
+							<%		if(list_teachers.get(i).getClass_() != null && !list_teachers.get(i).getClass_().equals("0")) { %>
 							<li class="">
 							<a href="<%="#" + list_teachers.get(i).getClass_() %>" data-toggle="tab"><%=list_teachers.get(i).getClass_() %></a>
 							</li>
@@ -88,7 +88,7 @@
 								<h3 class="panel-title">班级的详细信息（可修改）</h3>
 							</div>
 							<div class="panel-body">
-								<form class="form-horizontal" role="form" method="post" action="ClassServlet?Method=insert">
+								<form class="form-horizontal" role="form" method="post" action="ClassServlet?Method=update&&className=<%=list_teachers.get(i).getClass_() %>">
 									<div class="form-group">
 										<label for="firstname" class="col-sm-2 control-label">班级名称</label>
 										<label for="firstname" class="col-sm-2 control-label" style="margin-left:-15px;"><%=list_teachers.get(i).getClass_() %></label>
@@ -101,7 +101,7 @@
 												<option value="<%=list_teachers.get(i).getUid() %>"><%="默认：" + list_teachers.get(i).getName() + "-"
 							+ list_teachers.get(i).getUid()%></option>
 												<%	for(int j = 0; j < list_teachers.size(); j ++) { 
-														if(list_teachers.get(j).getClass_() == null) {
+														if(list_teachers.get(j).getClass_() == null || list_teachers.get(j).getClass_().equals("0") ) {
 												%>
 												<option value="<%=list_teachers.get(j).getUid() %>"><%=list_teachers.get(j).getName() + "-"
 							+ list_teachers.get(j).getUid()%></option>
@@ -115,7 +115,7 @@
 										<label for="lastname" class="col-sm-2 control-label">增减学生</label>
 										<div class="col-sm-10">
 											<!-- 找到当前班级中的所有学生 -->
-											<%	List<User> list_classStudents = DaoFactory.getUserService().selectUserByClass(list_teachers.get(i).getClass_());
+											<%	List<User> list_classStudents = DaoFactory.getUserService().selectUserByClassAndKind(list_teachers.get(i).getClass_(), 1);
 												for(int j = 0; j < list_classStudents.size(); j ++) {
 											 %>
 											<label class="checkbox"
@@ -124,18 +124,37 @@
 												<%=list_classStudents.get(j).getName() + "-" + list_classStudents.get(j).getUid() %>
 											</label>
 											<%	} %>
+											<!-- 显示所有没有加入班级的学生 -->
+											<%
+												for (int j = 0; j < list_students.size(); j++) {
+													if (list_students.get(j).getClass_() == null || list_students.get(j).getClass_().equals("0")) {
+											%>
+											<label class="checkbox"
+												style="float:left;margin-left:30px;width:130px;"> <input
+												type="checkbox" id="classStudents" name="classStudents[]" value="<%=list_students.get(j).getUid() %> ">
+												<%=list_students.get(j).getName() + "-" + list_students.get(j).getUid()%>
+											</label>
+											<%
+													}
+												}
+											%>
+											
 
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-sm-offset-8 col-md-4">
-											<button type="button" class="btn btn-defult"
-												style="float:left;">恢复默认</button>
 											<button type="submit" class="btn btn-primary"
 												style="float:left;margin-left:20px;">修改</button>
+								</form>
+											<form method="post" action="ClassServlet?Method=delete&&className=<%=list_teachers.get(i).getClass_() %>">
+												<button type="submit" class="btn btn-primary"
+												style="float:left;margin-left:20px;">删除</button>
+											</form>
+											
 										</div>
 									</div>
-								</form>
+								
 							</div>
 						</div>
 						<%		} %>
@@ -162,7 +181,7 @@
 												<option>--请选择老师--</option>
 												<%
 													for (int i = 0; i < list_teachers.size(); i++) {
-														if (list_teachers.get(i).getClass_() == null) {
+														if (list_teachers.get(i).getClass_() == null || list_teachers.get(i).getClass_().equals("0") ) {
 												%>
 												<option value="<%=list_teachers.get(i).getUid() %>"><%=list_teachers.get(i).getName() + "-"
 							+ list_teachers.get(i).getUid()%></option>
@@ -178,7 +197,7 @@
 										<div class="col-sm-10">
 											<%
 												for (int i = 0; i < list_students.size(); i++) {
-													if (list_students.get(i).getClass_() == null) {
+													if (list_students.get(i).getClass_() == null || list_students.get(i).getClass_().equals("0")) {
 											%>
 											<label class="checkbox"
 												style="float:left;margin-left:30px;width:130px;"> <input

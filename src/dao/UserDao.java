@@ -10,7 +10,7 @@ public interface UserDao {
 	
 	public List<User> selectAllUser() throws Exception;
 
-	public List<User> selectUserByClass(String class_) throws Exception;
+	public List<User> selectUserByClassAndKind(String class_, int kind) throws Exception;
 	
 	public List<User> selectUserByKind(int kind) throws Exception;
 	

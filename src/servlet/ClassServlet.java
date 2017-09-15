@@ -2,6 +2,8 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -75,14 +77,26 @@ public class ClassServlet extends HttpServlet {
 		
 		if(method.equals("insert")) {
 			insert(request, response);
-		} else {
-			
+		} else if(method.equals("update")) {
+			try {
+				update(request, response);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+		} else if(method.equals("delete")){
+			try {
+				delete(request, response);
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+			}
 		}
 		
 	
 	}
 
-	public void insert(HttpServletRequest request, HttpServletResponse response)
+	private void insert(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
 		String className = request.getParameter("className");
@@ -126,9 +140,100 @@ public class ClassServlet extends HttpServlet {
 			
 		}
 		
+		if(flag) {
+			response.sendRedirect("root.jsp");
+		}
+		
+		
+		
+		
+	}
+	
+	private void update(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		boolean flag = true;   // 标志位，表示更新数据是否成功
+		// 要修改的班级的名字
+		String className = request.getParameter("className");
+		// 新老师的UID
+		String classTeacher = request.getParameter("classTeacher");
+		// 修改之后的所有学生UID
+		String[] classStudents = request.getParameterValues("classStudents[]");
+		
+		// 首先，通过className找到原来的老师和原来的所有学生
+		List<User> oldStudents = DaoFactory.getUserService().selectUserByClassAndKind(className, 1);
+		User oldTeacher = DaoFactory.getUserService().selectUserByClassAndKind(className, 2).get(0);
+		
+		// 然后，修改新旧老师信息并更新
+			// 找到新老师的对象并修改class，更新
+		User newTeacher = DaoFactory.getUserService().selectUser(classTeacher, 2);
+		newTeacher.setClass_(className);
+		flag = flag && DaoFactory.getUserService().updateUser(newTeacher);
+			// 修改旧老师的class为null，更新
+		oldTeacher.setClass_("0");
+		flag = flag && DaoFactory.getUserService().updateUser(oldTeacher);
+		
+		// 最后，修改新旧学生的信息
+			// 通过新学生的UID找到所有的新学生对象
+		List<User> newStudents = new ArrayList<>();
+		for(int i = 0; i < classStudents.length; i ++) {
+			newStudents.add(DaoFactory.getUserService().selectUser(classStudents[i], 1));
+		}
+			// 将新旧学生List中相同的部分去掉，因为相同的不需要修改
+		for(int i = 0; i < oldStudents.size(); i ++) {
+			for(int j = 0; j < newStudents.size(); j ++) {
+				// i -- 是因为oldStudents删除第i项后，第i+1项就变成了第i项，所以第i项需要重新测试
+				if(oldStudents.get(i).getUid() == newStudents.get(j).getUid()) {
+					oldStudents.remove(i);
+					newStudents.remove(j);
+					i --;
+					break;
+				}
+			}
+		}
+			// 将旧学生List中剩余的数据的class置空，更新
+		for(User user : oldStudents) {
+			user.setClass_("0");
+			flag = flag && DaoFactory.getUserService().updateUser(user);
+		}
+			// 将新学生List中剩余的数据的class改为className，更新
+		for(User user : newStudents) {
+			user.setClass_(className);
+			flag = flag && DaoFactory.getUserService().updateUser(user);
+		}
+		
+		// 根据flag的值决定跳转
 		response.sendRedirect("root.jsp");
+		if(flag) {
+			
+		} else {
+			response.sendRedirect("error.jsp");
+		}
 		
 		
+	}
+	
+	private void delete(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		boolean flag = true;
+		// 要删除的班级的名字
+		String className = request.getParameter("className");
+		// 首先，通过className找到原来的老师和原来的所有学生
+		List<User> oldStudents = DaoFactory.getUserService().selectUserByClassAndKind(className, 1);
+		User oldTeacher = DaoFactory.getUserService().selectUserByClassAndKind(className, 2).get(0);
+		// 然后，将学生和老师的class置为0，更新
+		for(User user : oldStudents) {
+			user.setClass_("0");
+			flag = flag && DaoFactory.getUserService().updateUser(user);
+		}
+		oldTeacher.setClass_("0");
+		flag = flag && DaoFactory.getUserService().updateUser(oldTeacher);
+		
+		if(flag) {
+			response.sendRedirect("root.jsp");
+		} else {
+			response.sendRedirect("error.jsp");
+		}
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -137,16 +242,12 @@ public class ClassServlet extends HttpServlet {
 		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
 		out.println("  <BODY>");
 		out.print("    This is ");
-		out.println(className);
-		out.println(classTeacher);
-		for(String student : classStudents)
-			out.println(student);
+		out.println("delete");
 		out.println(", using the POST method");
 		out.println("  </BODY>");
 		out.println("</HTML>");
 		out.flush();
 		out.close();
-		
 	}
 	
 	/**
