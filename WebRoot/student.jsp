@@ -106,7 +106,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<td class="table-td"><%=tests.get(i).getStart().toLocaleString()%></td>
 									<%
 										int minutes = tests.get(i).getTrue_time().getMinutes();
-																                                    	int seconds = tests.get(i).getTrue_time().getSeconds();
+										int seconds = tests.get(i).getTrue_time().getSeconds();
 									%>
 									<td class="table-td"><%=(minutes != 0 ? minutes + "分" : "") + seconds + "秒"%></td>
 									<td class="table-td"><%=tests.get(i).getScore()%></td>

@@ -34,9 +34,35 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <jsp:include page="toolbar.jsp"></jsp:include>
   <!--获取对应班级的所有学生selectUserByClass-->
   <%
-        User user =(User)session.getAttribute("user");
+      User user =(User)session.getAttribute("user");
+      List<User> userList= DaoFactory.getUserService().selectUserByClass(user.getUid());
+      List<List<Test>> allUserTests = new ArrayList<>();
+      List<List<TestContent>> userTestsTid = new ArrayList<>();
+      //List<Problem> inProblem = new ArrayList<>();
+      List<Problem> userTestContentPid = new ArrayList<>();
+      //获取每个人的测试，并装入list
+      for(int i = 0;i < userList.size();i++) {
+           List<Test> test = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
+           allUserTests.add(test);
+      }
+      //获取每个人测试的test的tid
+      for(int i = 0;i < allUserTests.size();i++){
+        for(int j = 0;j < allUserTests.get(i).size();j++)
+      {
+          List<TestContent> testContents = DaoFactory.getTestContentService().selectTestContentByTid(allUserTests.get(i).get(j).getTid());
+          userTestsTid.add(testContents);
+        }
+      }
+      //对应的problem
+      for(int i = 0;i < userTestsTid.size();i++){
+          for(int j = 0;j < userTestsTid.get(i).size();j++){
+              Problem problems =DaoFactory.getProblemService().selectProblemByPid(userTestsTid.get(i).get(j).getPid());
 
-        List<User> userList = DaoFactory.getUserService().selectUserByClass(user.getClass_());
+              userTestContentPid.add(problems);
+
+          }
+
+      }
   %>
   <div class="row">
       <ul class="nav nav-tabs col-md-6 col-md-offset-3" id="myTab">
@@ -64,122 +90,44 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                           <th>学号</th>
                           <th>姓名</th>
                           <th>班级</th>
-                          <th>成绩</th>
+                          <th>平均成绩</th>
                       </tr>
-                      <% for (int i=0;i<userList.size();i++) {  %>
+                      <% for (int i=0;i<userList.size();i++) {
+                          int sum = 0;
+                      %>
                       <tr>
                           <td><%=userList.get(i).getUid()%></td>
                           <td><%=userList.get(i).getName()%></td>
                           <td><%=userList.get(i).getClass_()%></td>
-                          <td>10</td>
+                          <%for(int j = 0;j < allUserTests.get(i).size();j++){
+
+                              sum = allUserTests.get(i).get(j).getScore() + sum;
+                          }%>
+                          <td><%=sum/allUserTests.get(i).size()%></td>
                       </tr>
                       <% }                                       %>
                   </table>
                   <% } %>
+
+
+
+
                   <div class="col-md-6" style="margin-top:40px">
                       <div class="panel panel-info">
                           <div class="panel-heading text-left">
-                              <h3>各题正确率:</h3>
+                              <h3>各人总体正确率:</h3>
                           </div>
                           <div class="panel-body">
                               <ul class="progress-ul">
+
                                   <li>
                                       <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">1</span>
+                                          <span class="badge"></span>
                                       </div>
                                       <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 80%;">
+                                          <div class="progress-bar" role="progressbar" aria-valuenow=""
+                                               aria-valuemin="0" aria-valuemax="100" style="width:80%">
                                               80%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">2</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">3</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">4</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">5</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">6</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">7</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">8</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">9</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
-                                          </div>
-                                      </div>
-                                  </li>
-                                  <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge">10</span>
-                                      </div>
-                                      <div class="progress" style="width: 90%">
-                                          <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                                              60%
                                           </div>
                                       </div>
                                   </li>
