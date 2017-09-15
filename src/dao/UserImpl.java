@@ -95,8 +95,23 @@ public class UserImpl implements UserDao {
 
 	@Override
 	public boolean updateUser(User user) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		
+		String sql = "update user set "
+				+ "name = ?, pswd = ?, kind = ?, class = ?"
+				+ "where uid = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, user.getName());
+		pstmt.setString(2, user.getPswd());
+		pstmt.setInt(3, user.getKind());
+		pstmt.setString(4, user.getClass_());
+		pstmt.setString(5, user.getUid());
+		int flag = pstmt.executeUpdate();
+		
+		if(flag == 1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

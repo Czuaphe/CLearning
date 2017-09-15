@@ -66,26 +66,80 @@
 							</h3>
 						</div>
 						<ul class="nav nav-pills nav-stacked" style="text-align:center;">
-							<li class=""><a href="#demo" data-toggle="tab">14070642</a></li>
-							<li class=""><a href="#demo" data-toggle="tab">14060241</a></li>
-							<li class=""><a href="#demo" data-toggle="tab">13060844</a></li>
+							<%	for(int i = 0; i < list_teachers.size(); i ++) { %>
+							<%		if(list_teachers.get(i).getClass_() != null) { %>
+							<li class="">
+							<a href="<%="#" + list_teachers.get(i).getClass_() %>" data-toggle="tab"><%=list_teachers.get(i).getClass_() %></a>
+							</li>
+							<!-- <button type="button" class="close" data-dismiss="modal"aria-hidden="true">&times;</button> -->
+							<%		} %>
+							<%	} %>
 							<li class=""><a href="#addClass" data-toggle="tab"><b>添加班级</b></a></li>
 						</ul>
 					</div>
 					<!-- 右栏显示班级的详细信息 -->
 					<div id="myTabContent" class="tab-content">
 						<!-- 普通右栏-显示班级的所有信息 -->
-						<div class="panel panel-default tab-pane fade in" id="demo"
+						<%	for(int i = 0; i < list_teachers.size(); i ++) { %>
+						<%		if(list_teachers.get(i).getClass_() != null) { %>
+						<div class="panel panel-default tab-pane fade in" id="<%=list_teachers.get(i).getClass_() %>"
 							style="float:left; width:650px;margin-left:50px;">
 							<div class="panel-heading">
-								<h3 class="panel-title">班级的详细信息</h3>
+								<h3 class="panel-title">班级的详细信息（可修改）</h3>
 							</div>
-							<div class="panel-body text-center" style="font-size: 20px">
-								<p>
-									您暂时未进行测试，可以去<a href="test_before.jsp">测试</a>，让我了解您的知识水平
-								</p>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form" method="post" action="ClassServlet?Method=insert">
+									<div class="form-group">
+										<label for="firstname" class="col-sm-2 control-label">班级名称</label>
+										<label for="firstname" class="col-sm-2 control-label" style="margin-left:-15px;"><%=list_teachers.get(i).getClass_() %></label>
+
+									</div>
+									<div class="form-group">
+										<label for="lastname" class="col-sm-2 control-label">修改老师</label>
+										<div class="col-sm-10">
+											<select class="form-control" name="classTeacher" id="classTeacher">
+												<option value="<%=list_teachers.get(i).getUid() %>"><%="默认：" + list_teachers.get(i).getName() + "-"
+							+ list_teachers.get(i).getUid()%></option>
+												<%	for(int j = 0; j < list_teachers.size(); j ++) { 
+														if(list_teachers.get(j).getClass_() == null) {
+												%>
+												<option value="<%=list_teachers.get(j).getUid() %>"><%=list_teachers.get(j).getName() + "-"
+							+ list_teachers.get(j).getUid()%></option>
+												<%		} 
+													}
+												%>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="lastname" class="col-sm-2 control-label">增减学生</label>
+										<div class="col-sm-10">
+											<!-- 找到当前班级中的所有学生 -->
+											<%	List<User> list_classStudents = DaoFactory.getUserService().selectUserByClass(list_teachers.get(i).getClass_());
+												for(int j = 0; j < list_classStudents.size(); j ++) {
+											 %>
+											<label class="checkbox"
+												style="float:left;margin-left:30px;width:130px;"> <input checked="checked"
+												type="checkbox" id="classStudents" name="classStudents[]" value="<%=list_classStudents.get(j).getUid() %>">
+												<%=list_classStudents.get(j).getName() + "-" + list_classStudents.get(j).getUid() %>
+											</label>
+											<%	} %>
+
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-offset-8 col-md-4">
+											<button type="button" class="btn btn-defult"
+												style="float:left;">恢复默认</button>
+											<button type="submit" class="btn btn-primary"
+												style="float:left;margin-left:20px;">修改</button>
+										</div>
+									</div>
+								</form>
 							</div>
 						</div>
+						<%		} %>
+						<%	} %>
 						<!-- 特殊右栏-添加班级的页面 -->
 						<div class="panel panel-default tab-pane fade" id="addClass"
 							style="float:left; width:650px;margin-left:50px;">
@@ -105,6 +159,7 @@
 										<label for="lastname" class="col-sm-2 control-label">选择老师</label>
 										<div class="col-sm-10">
 											<select class="form-control" name="classTeacher" id="classTeacher">
+												<option>--请选择老师--</option>
 												<%
 													for (int i = 0; i < list_teachers.size(); i++) {
 														if (list_teachers.get(i).getClass_() == null) {
