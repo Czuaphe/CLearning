@@ -1,11 +1,13 @@
-<%@ page language="java"
-         import="java.util.*, factory.DaoFactory, bean.*" pageEncoding="UTF-8"%>
+<%@ page language="JAVA" import="java.util.*, factory.DaoFactory, bean.*" pageEncoding="UTF-8"%>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.math.RoundingMode" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
     <base href="<%=basePath%>">
@@ -35,33 +37,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <!--获取对应班级的所有学生selectUserByClass-->
   <%
       User user =(User)session.getAttribute("user");
-      List<User> userList= DaoFactory.getUserService().selectUserByClass(user.getUid());
+      List<User> userList= DaoFactory.getUserService().selectUserByClassAndKind(user.getUid(),1);
       List<List<Test>> allUserTests = new ArrayList<>();
       List<List<TestContent>> userTestsTid = new ArrayList<>();
-      //List<Problem> inProblem = new ArrayList<>();
       List<Problem> userTestContentPid = new ArrayList<>();
+
       //获取每个人的测试，并装入list
       for(int i = 0;i < userList.size();i++) {
            List<Test> test = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
            allUserTests.add(test);
-      }
-      //获取每个人测试的test的tid
-      for(int i = 0;i < allUserTests.size();i++){
-        for(int j = 0;j < allUserTests.get(i).size();j++)
-      {
-          List<TestContent> testContents = DaoFactory.getTestContentService().selectTestContentByTid(allUserTests.get(i).get(j).getTid());
-          userTestsTid.add(testContents);
-        }
-      }
-      //对应的problem
-      for(int i = 0;i < userTestsTid.size();i++){
-          for(int j = 0;j < userTestsTid.get(i).size();j++){
-              Problem problems =DaoFactory.getProblemService().selectProblemByPid(userTestsTid.get(i).get(j).getPid());
-
-              userTestContentPid.add(problems);
-
-          }
-
       }
   %>
   <div class="row">
@@ -73,12 +57,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
               <a data-toggle="tab" href="#content2">按章节查看</a>
           </li>
       </ul>
-      <div class="col-md-6 col-md-offset-3 tab-content" id="myTabContent">
+      <div class="col-md-6 col-md-offset-3 tab-content">
           <!--按班级查看-->
           <div class="tab-pane fade in active" id="content1">
+              <!-- 显示班级所有学生 -->
               <div class="panel panel-primary" style="margin-top: 40px">
-                  <!-- Default panel contents -->
-                  <div class="panel-heading text-center panel-heading-style">班级学生</div>
+
+                  <div class="panel-heading text-center panel-heading-style">
+                      班级学生
+                  </div>
                   <% if(userList.size()==0) {%>
                   <div class="panel-body">
                       <p>班级暂时没有学生，请等待管理员分配</p>
@@ -97,7 +84,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                       %>
                       <tr>
                           <td><%=userList.get(i).getUid()%></td>
-                          <td><%=userList.get(i).getName()%></td>
+                          <td>
+                              <a href="#<%=userList.get(i).getName()%>" data-toggle="tab">
+                                  <%=userList.get(i).getName()%>
+                              </a>
+                          </td>
                           <td><%=userList.get(i).getClass_()%></td>
                           <%for(int j = 0;j < allUserTests.get(i).size();j++){
 
@@ -109,102 +100,146 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                   </table>
                   <% } %>
 
-
-
-
-                  <div class="col-md-6" style="margin-top:40px">
+              </div>
+              <!--左下各人总体正确率-->
+              <div class="col-md-6" style="margin-top:40px">
                       <div class="panel panel-info">
                           <div class="panel-heading text-left">
                               <h3>各人总体正确率:</h3>
                           </div>
                           <div class="panel-body">
                               <ul class="progress-ul">
+                                  <%!
+                                      public String accuracy(double num, double total, int scale){
+                                      DecimalFormat df = (DecimalFormat) NumberFormat.getInstance();
+                                      //可以设置精确几位小数
+                                      df.setMaximumFractionDigits(scale);
+                                      //模式 例如四舍五入
+                                      df.setRoundingMode(RoundingMode.HALF_UP);
+                                      double accuracy_num = num / total * 100;
+                                      return df.format(accuracy_num)+"%";
+                                      }
 
+                                  %>
+                                  <%
+                                      for(int i = 0;i < userList.size();i++)
+                                      {
+                                          int sum = 0;
+                                          //List<Problem> userProblem = new ArrayList<>();
+                                          List<Test> userTest = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
+                                          for(int j = 0;j < userTest.size();j++)
+                                          {
+                                              List<TestContent> userTestContent = DaoFactory.getTestContentService().selectTestContentByTid(userTest.get(j).getTid());
+                                              for (int m = 0; m < userTestContent.size(); m++) {
+                                                  Problem problem = DaoFactory.getProblemService().selectProblemByPid(userTestContent.get(m).getPid());
+                                                  if (problem.getTrue_option() == userTestContent.get(m).getYour_option()) {
+                                                      sum++;
+                                                  }
+                                              }
+                                          }
+
+                                  %>
                                   <li>
-                                      <div style="width:5%;float:left;margin-right: 10px">
-                                          <span class="badge"></span>
+                                      <div style="width:10%;float:left;margin-right: 10px">
+                                          <span class="badge"><%=userList.get(i).getName()%></span>
                                       </div>
-                                      <div class="progress" style="width: 90%">
+                                      <div class="progress" style="width: 80%">
                                           <div class="progress-bar" role="progressbar" aria-valuenow=""
-                                               aria-valuemin="0" aria-valuemax="100" style="width:80%">
-                                              80%
+                                               aria-valuemin="0" aria-valuemax="100" style="width:<%=accuracy(sum,(userTest.size())*10,1)%>">
+                                              <%=accuracy(sum,(userTest.size())*10,1)%>
                                           </div>
                                       </div>
                                   </li>
+
+                                  <%
+                                  }%>
                               </ul>
                           </div>
                       </div>
-
-
                   </div>
-                  <div class="col-md-6"  style="margin-top: 40px">
-                      <div class="panel panel-danger">
-                          <div class="panel-heading text-center">
-                              <h3>总体正确率</h3>
-                          </div>
-                          <div class="panel-body" style="padding-top: 115px">
-                              <div class="" id="AllStatus"
-                                   style="height: 300px; margin-left: 10px;">
-                              </div>
-                          </div>
-                      </div>
-
-                  </div>
-                  <script type="text/javascript">
-
-                      // 基于准备好的dom，初始化echarts实例
-                      var myChartAllStatus = echarts.init(document
-                          .getElementById('AllStatus'));
-                      optionA = {
-                          title: {
-                              text: '测试题目10道',
-                              left: 'center'
-                          },
-                          tooltip : {
-                              trigger : 'item',
-                              formatter : "{a} <br/>{b} : {c} ({d}%)"
-                          },
-                          legend : {
-                              orient : 'vertical',
-                              left : 'left',
-                              data : [ '正确', '错误' ]
-                          },
-                          series : [ {
-                              name : '测试整体正确率',
-                              type : 'pie',
-                              radius : [ '50%', '70%' ],
-                              avoidLabelOverlap : false,
-                              label : {
-                                  normal : {
-                                      show : false,
-                                      position : 'center'
-                                  },
-                                  emphasis : {
-                                      show : true,
-                                      textStyle : {
-                                          fontSize : '30',
-                                          fontWeight : 'bold'
+              <!--右下扇形统计图-->
+              <div class="col-md-6 tab-content"  style="margin-top: 40px">
+                      <%for(int i = 0;i < userList.size();i++){%>
+                      <div class="tab-pane fade" id="<%=userList.get(i).getName()%>">
+                          <div class="panel panel-danger">
+                          <%
+                                  int sum = 0;
+                                  List<Test> userTest = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
+                                  for (int j = 0; j < userTest.size(); j++) {
+                                      List<TestContent> userTestContent = DaoFactory.getTestContentService().selectTestContentByTid(userTest.get(j).getTid());
+                                      for (int m = 0; m < userTestContent.size(); m++) {
+                                          Problem problem = DaoFactory.getProblemService().selectProblemByPid(userTestContent.get(m).getPid());
+                                          if (problem.getTrue_option() == userTestContent.get(m).getYour_option()) {
+                                              sum++;
+                                          }
                                       }
                                   }
-                              },
-                              labelLine : {
-                                  normal : {
-                                      show : false
-                                  }
-                              },
-                              data : [ {
-                                  value : 80,
-                                  name : '正确'
-                              } ,{
-                                  value: 25,
-                                  name:'错误'
-                              }]
-                          } ]
-                      };
+                          %>
+                              <div class="panel-heading text-center">
+                                  <h3><%=userList.get(i).getName()%>做题统计</h3>
+                              </div>
+                              <div class="panel-body tab-pane fade" style="padding-top: 15px">
+                                  <div class="" id="<%=userList.get(i).getUid()%>" style="height: 300px; margin-left: 10px">
+                                  </div>
+                                  <script type="text/javascript">
+                                      var <%="myChartAllStatus"+ userList.get(i).getUid() %> = echarts.init(document
+                                          .getElementById('<%=userList.get(i).getUid()%>'));
+                                      <%="option"+userList.get(i).getUid()%>={
+                                          title: {
+                                              text: '测试题目<%=(userTest.size())*10%>道',
+                                              left: 'center'
+                                          },
+                                          tooltip : {
+                                              trigger : 'item',
+                                              formatter : "{a} <br/>{b} : {c} ({d}%)"
+                                          },
+                                          legend : {
+                                              orient : 'vertical',
+                                              left : 'left',
+                                              data : [ '正确', '错误' ]
+                                          },
+                                          series : [ {
+                                              name : '测试整体正确率',
+                                              type : 'pie',
+                                              radius : [ '50%', '70%' ],
+                                              avoidLabelOverlap : false,
+                                              label : {
+                                                  normal : {
+                                                      show : false,
+                                                      position : 'center'
+                                                  },
+                                                  emphasis : {
+                                                      show : true,
+                                                      textStyle : {
+                                                          fontSize : '30',
+                                                          fontWeight : 'bold'
+                                                      }
+                                                  }
+                                              },
+                                              labelLine : {
+                                                  normal : {
+                                                      show : false
+                                                  }
+                                              },
+                                              data : [ {
+                                                  value : <%=sum%>,
+                                                  name : '正确'
+                                              } ,{
+                                                  value: <%=userTest.size()*10-sum%>,
+                                                  name:'错误'
+                                              }]
+                                          } ]
+                                      };
+                                      <%="myChartAllStatus"+ userList.get(i).getUid()%>.setOption(<%="option" + userList.get(i).getUid()%>);
+                                  </script>
+                              </div>
+                          </div>
 
-                      myChartAllStatus.setOption(optionA);
-                  </script>
+                      </div>
+
+                  <%}%>
               </div>
+
           </div>
           <!--按章节查看-->
           <div class="tab-pane fade" id="content2">
