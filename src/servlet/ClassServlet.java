@@ -165,13 +165,14 @@ public class ClassServlet extends HttpServlet {
 		User oldTeacher = DaoFactory.getUserService().selectUserByClassAndKind(className, 2).get(0);
 		
 		// 然后，修改新旧老师信息并更新
-			// 找到新老师的对象并修改class，更新
+		// 修改旧老师的class为null，更新
+		oldTeacher.setClass_("0");
+		flag = flag && DaoFactory.getUserService().updateUser(oldTeacher);	
+		// 找到新老师的对象并修改class，更新
 		User newTeacher = DaoFactory.getUserService().selectUser(classTeacher, 2);
 		newTeacher.setClass_(className);
 		flag = flag && DaoFactory.getUserService().updateUser(newTeacher);
-			// 修改旧老师的class为null，更新
-		oldTeacher.setClass_("0");
-		flag = flag && DaoFactory.getUserService().updateUser(oldTeacher);
+			
 		
 		// 最后，修改新旧学生的信息
 			// 通过新学生的UID找到所有的新学生对象
@@ -209,7 +210,6 @@ public class ClassServlet extends HttpServlet {
 		} else {
 			response.sendRedirect("error.jsp");
 		}
-		
 		
 	}
 	
