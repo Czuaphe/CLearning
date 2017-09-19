@@ -56,7 +56,9 @@
 	window.alert("该用户已经注册，请直接登录！");
 </script>
 <% 		} %>
-<%		if(signupStatus.equals("PswdNotSame")) { %>
+<%		if(signupStatus.equals("PswdNotSame")) { 
+			session.setAttribute("signupStatus", new String("Normal"));
+%>s		
 <script>
 	window.alert("两次密码不同，请重新注册");
 </script>
