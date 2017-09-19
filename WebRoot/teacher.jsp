@@ -30,6 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       <link rel="stylesheet" href="./css/toolbar.css">
       <!-- 自定义CSS -->
       <link rel="stylesheet" href="./css/teacher.css">
+      <link rel="stylesheet" href="./css/knowledge.css">
   </head>
   
   <body style="padding-top: 70px">
@@ -242,11 +243,48 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
           </div>
           <!--按章节查看-->
+          <%
+              List<Knowledge> knowledges = DaoFactory.getKnowledgeService().selectAllKnowledge();
+          %>
           <div class="tab-pane fade" id="content2">
-              <div class="tab-pane fade">
-                  <div class="col-md-3 " style="background-color: #2aabd2;height:800px">
+              <div>
+                  <div class="col-md-3 " style="background-color: #2aabd2">
+                      <%for(int i = 1;i < knowledges.size();i++){
 
+                      %>
+                      <div class="panel panel-default" style="margin-bottom: 0">
+                          <% if(knowledges.get(i).getSection()==0){%>
+                          <div class="panel-heading">
+                              <h4 class="panel-title">
+
+                                  <a data-toggle="collapse" data-parent="#accordion"
+                                     href="#<%=knowledges.get(i).getChapter()%>.<%=knowledges.get(i).getSection()%>" style="text-decoration: none">
+                                      <%=knowledges.get(i).getTitle()%>
+                                  </a>
+                                  <%}%>
+                              </h4>
+                          </div>
+                          <div id="<%=knowledges.get(i).getChapter()%>.<%=knowledges.get(i).getSection()%>" class="panel-collapse collapse">
+
+                              <div class="panel-body">
+                                  <div class="col-md-12">
+                                      <ul style="border: none">
+                                          <%  if(knowledges.get(i).getSection()>0){%>
+                                          <li class="list-group-item" style="border: none">
+                                              <%=knowledges.get(i).getTitle()%>
+                                          </li>
+                                          <%}%>
+                                      </ul>
+                                  </div>
+                              </div>
+
+                          </div>
+                      </div>
+                      <%}%>
                   </div>
+              </div>
+
+
               <!--右侧表格显示学生信息-->
               <div class="col-md-8">
                   <div class="panel panel-primary">

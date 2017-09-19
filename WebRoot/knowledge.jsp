@@ -52,11 +52,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             	</ul>
             </div>
             <%  		} %>
-            <li class="" data-toggle="collapse"  data-target="<%="#Chapter_" + list.get(i).getChapter() %>"><a href="<%="#Chapter_" + list.get(i).getChapter() + "_" + list.get(i).getSection() %>" data-toggle="tab"><b><%=list.get(i).getTitle() %></b></a></li>
+            <li class="" data-toggle="collapse"  data-target="<%="#Chapter_" + list.get(i).getChapter() %>">
+                <a href="<%="#Chapter_" + list.get(i).getChapter() + "_" + list.get(i).getSection() %>" data-toggle="tab">
+                    <b><%=list.get(i).getTitle() %></b>
+                </a>
+            </li>
             <div id="<%="Chapter_" + list.get(i).getChapter() %>" class="collapse">
                 <ul class="nav nav-pills nav-stacked">
             	<% 	} else { %>
-                     <li><a href="<%="#Chapter_" + list.get(i).getChapter() + "_" + list.get(i).getSection() %>" data-toggle="tab">&nbsp;&nbsp;&nbsp;&nbsp;<%=list.get(i).getTitle() %></a></li>	                
+                     <li>
+                         <a href="<%="#Chapter_" + list.get(i).getChapter() + "_" + list.get(i).getSection() %>" data-toggle="tab">&nbsp;&nbsp;&nbsp;&nbsp;<%=list.get(i).getTitle() %>
+                         </a>
+                     </li>
 				<% 		} %>
             <%	} %>
             	</ul>
