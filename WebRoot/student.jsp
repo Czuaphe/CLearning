@@ -256,8 +256,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</div>
 				</div>
 
-
-
 				<!--content2-->
 				<div class="tab-pane fade row" id="content2">
 					<div class="col-md-12" style="margin-top:40px">
@@ -280,7 +278,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<th class="table-th" style="width: 20%">正确率</th>
 									<th class="table-th" style="width: 20%">是否收藏</th>
 								</tr>
-								<% 	// 去重
+								<% 	// 去重（不应该放在JSP中，应该在Servlet或过滤器中），但是不成功
 									LinkedHashSet<ProblemInfo> problems_set = new LinkedHashSet<ProblemInfo>();
 									for(int i = 0; i < tests_problems.size(); i++) {
 										for(int j = 0; j < tests_problems.get(i).size(); j ++) {
@@ -310,6 +308,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						</div>
 					</div>
 				</div>
+				<!-- content2 end -->
 			</div>
 		</div>
 	</div>

@@ -121,5 +121,10 @@
 			</div>
 		</div>
 	</div>
+	
+	<%-- <jsp:include page="footer.jsp">
+  			<jsp:param value="0" name="flag"/>
+  	</jsp:include> --%>
+	
 </body>
 </html>

@@ -26,14 +26,46 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
   </head>
   
-  <body style="padding-top:70px;">
+  <body style="padding-top:50px;">
   	<jsp:include page="toolbar.jsp">
   			<jsp:param value="0" name="flag"/>
   	</jsp:include>
   	
-    This is my JSP page. <br>
-    <%=SQLConnection.isConnection() %>
-    <input type="button" value="按钮" onClick="hello();"/>
+    <!-- lunbo start -->
+    <div id="myCarousel" class="carousel slide" >
+        <!-- 轮播（Carousel）指标 -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+        <!-- 轮播（Carousel）项目 -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <img src="./img/banner_img01.jpg" alt="First slide">
+            </div>
+            <div class="item">
+                <img src="./img/banner_img02.jpg" alt="Second slide">
+            </div>
+            <div class="item">
+                <img src="./img/banner_img03.jpg" alt="Third slide">
+            </div>
+            <div class="item">
+                <img src="./img/banner_img04.jpg" alt="Fourth slide">
+            </div>
+        </div>
+        <!-- 轮播（Carousel）导航 -->
+        <a class="carousel-control left" href="#myCarousel"
+           data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#myCarousel"
+           data-slide="next">&rsaquo;</a>
+    </div>
+    <!-- lunbo end -->
+    
+    <jsp:include page="footer.jsp">
+  			<jsp:param value="0" name="flag"/>
+  	</jsp:include>
     
   </body>
 </html>

@@ -16,6 +16,7 @@ public class Problem {
 	public Problem() {}
 	
 	public Problem(int pid, String name, int score, int chapter, int section, String title, String option1, String option2, String option3, String option4, int true_option) {
+		
 		this.pid = pid;
 		this.name = name;
 		this.score = score;
