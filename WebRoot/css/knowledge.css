@@ -7,7 +7,7 @@ body{
 }
 .all{
     width: 1000px;
-    height: 300px;
+    
 }
 .menu{
     width: 250px;
@@ -18,7 +18,7 @@ body{
 }
 .content{
     width: 730px;
-    height: 300px;
+    
     padding: 30px;
     float: left;
 }

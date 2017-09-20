@@ -81,8 +81,28 @@ public class ProblemImpl implements ProblemDao{
 
 	@Override
 	public boolean updateProblem(Problem problem) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+
+		String sql = "update problem set "
+				+ "chapter = ?, title = ?, option1 = ?, option2 = ?,"
+				+ "option3 = ?, option4 = ?, true_option = ? "
+				+ "where pid = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, problem.getChapter());
+		pstmt.setString(2, problem.getTitle());
+		pstmt.setString(3, problem.getOption1());
+		pstmt.setString(4, problem.getOption2());
+		pstmt.setString(5, problem.getOption3());
+		pstmt.setString(6, problem.getOption4());
+		pstmt.setInt(7, problem.getTrue_option());
+		pstmt.setInt(8, problem.getPid());
+		int flag = pstmt.executeUpdate();
+		
+		if(flag == 1) {
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 
 	@Override

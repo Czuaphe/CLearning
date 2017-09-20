@@ -40,7 +40,7 @@
 				data-toggle="tab"> 知识点管理 </a></li>
 			<li class="" data-toggle="tab"><a href="#content3"
 				data-toggle="tab"> 用户管理 </a></li>
-			<li class="" data-toggle="tab"><a href="#content4"
+			<li class=""><a href="#content4"
 				data-toggle="tab"> 题目管理 </a></li>
 		</ul>
 		<div class="tab-content">
@@ -379,25 +379,28 @@
 							</tr>
 							<!-- 循环输出每一题 -->
 							<%
-								for (Problem problem : list_problems) {
+								for (int i = 0; i < list_problems.size(); i++) {
+									
+									int pid = list_problems.get(i).getPid();
+									ArrayList<TestContent> list_pid = DaoFactory.getTestContentService().selectTestContentByPid(pid);
+									int sum = 0;
+									for(int k = 0; k < list_pid.size(); k ++) {
+										if(list_pid.get(k).getYour_option() == list_problems.get(i).getTrue_option()) {
+											sum ++;
+										}
+									}
 							%>
 							<!-- 输出本题目的作答信息 -->
 							<tr>
-								<td class="table-td"><%=problem.getPid()%></td>
+								<td class="table-td"><%=list_problems.get(i).getPid()%></td>
 								<td class="table-td"><a
-									href="<%="#" + problem.getChapter() + "_"
-						+ problem.getSection() + "_" + problem.getName()%>"
-									data-toggle="collapse"><%=( problem.getChapter() == 0 ? "序言" : "第" + problem.getChapter() + "章") + "_" + problem.getName()%></a></td>
-								<td class="table-td">111</td>
-								<td class="table-td">111</td>
-
-								<!-- 输出本题目的详细信息 -->
-								<div
-									id="<%="" + problem.getChapter() + "_"
-						+ problem.getSection() + "_" + problem.getName()%>"
-									class="collapse">
-									<%=problem.getTitle() %>								
-								</div>
+									href="<%="#" + list_problems.get(i).getChapter() + "_"
+						+ list_problems.get(i).getSection() + "_" + i%>"
+									data-toggle="modal"> <%=(list_problems.get(i).getChapter() == 0 ? "序言" : "第"
+						+ list_problems.get(i).getChapter() + "章")
+						+ "_" + list_problems.get(i).getName()%></a></td>
+								<td class="table-td"><%=list_pid.size() %></td>
+								<td class="table-td"><%=list_pid.size() > 0 ? (int)((double)sum / list_pid.size() * 100) + "%" : "-" %></td>
 							</tr>
 							<%
 								}
@@ -406,6 +409,131 @@
 						</table>
 					</div>
 				</div>
+				<!-- 显示题目详细信息模态框（Modal） -->
+				<%
+					for (int i = 0; i < list_problems.size(); i++) {
+				%>
+				<!-- 注册模态框（Modal） -->
+				<div class="modal fade" id=<%="" + list_problems.get(i).getChapter() + "_"
+						+ list_problems.get(i).getSection() + "_" + i%> tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">题目管理</h4>
+							</div>
+
+							<!-- from 表单 -->
+							<form class="form-horizontal" role="form" name="myFrom"
+								method="post" action="ProblemServlet?Method=udpate&&pid=<%=list_problems.get(i).getPid() %>">
+								<div class="modal-body">
+									<div class="form-group">
+										<div class="col-sm-offset-2 col-sm-10">
+											<label for="name" class="control-label"><%="" + list_problems.get(i).getChapter() + "_" + list_problems.get(i).getName() %></label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="name" class="col-sm-2 control-label">所属章节</label>
+										<div class="col-sm-10">
+											<select class="form-control" name="chapter">
+												<option value="-1">-请选择-</option>
+												<%	String[] optionName = {"序言", "第一章", "第二章", "第三章", "第四章", "第五章", "第六章", "第七章"}; 
+													for(int j = 0; j < optionName.length; j ++) {
+														if(j == list_problems.get(i).getChapter()) {
+												%>
+												<option selected="selected" value="<%= j %>" ><%="默认-" + optionName[j] %></option>
+												<%		} else { %>
+												<option value="<%= j %>" ><%=optionName[j] %></option>
+												<%		}
+													} 
+												%>
+											</select>
+										</div>
+
+									</div>
+
+									<div class="form-group">
+										<label for="firstname" class="col-sm-2 control-label">标题</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="title" name="title"
+												placeholder="请输入标题" value=<%=list_problems.get(i).getTitle()%>>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="firstname" class="col-sm-2 control-label">选项1</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="option1" name="option1"
+												placeholder="请输入选项1" value=<%=list_problems.get(i).getOption1()%>>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="lastname" class="col-sm-2 control-label">选项2</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="option2" name="option2"
+											 placeholder="请输入选项2" value=<%=list_problems.get(i).getOption2()%>>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="lastname" class="col-sm-2 control-label">选项3</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="option3" name="option3"
+											 placeholder="请再次输入选项3" value=<%=list_problems.get(i).getOption3()%>>
+										</div>
+									</div>
+		
+									<div class="form-group">
+										<label for="lastname" class="col-sm-2 control-label">选项4</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="option4" name="option4"
+											 placeholder="请再次输入选项4" value=<%=list_problems.get(i).getOption4()%>>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="name" class="col-sm-2 control-label">正确选项</label>
+										<div class="col-sm-10">
+											<select class="form-control" name="true_option">
+												<%	for(int j = 0; j < 4; j ++) { 
+														if(j + 1 == list_problems.get(i).getTrue_option()) {
+												%>
+												<option selected="selected" value="<%= j + 1 %>"><%="默认-选项" + (j + 1) %></option>
+												<%		
+														} else {
+												%>
+												<option value="<%= j + 1 %>"><%="选项" + (j + 1) %></option>
+												<% 
+														}
+													}
+												%>
+											</select>
+										</div>
+
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default"
+										data-dismiss="modal">关闭</button>
+									<button type="submit" class="btn btn-primary">修改</button>
+								</div>
+							</form>
+
+							<!-- from 表单结束  -->
+
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal -->
+				</div>
+
+
+				<%
+					}
+				%>
+
 			</div>
 			<!-- content4 end -->
 		</div>
