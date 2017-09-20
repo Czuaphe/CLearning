@@ -19,6 +19,12 @@ public class KnowledgeService implements KnowledgeDao{
 	}
 
 	@Override
+	public ArrayList<Knowledge> selectSectionIsZero() throws Exception {
+
+		return knowledgeImpl.selectSectionIsZero();
+	}
+
+	@Override
 	public Knowledge selectKnowledge(int kid) throws Exception {
 		
 		return knowledgeImpl.selectKnowledge(kid);

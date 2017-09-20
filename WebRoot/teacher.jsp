@@ -30,18 +30,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       <link rel="stylesheet" href="./css/toolbar.css">
       <!-- 自定义CSS -->
       <link rel="stylesheet" href="./css/teacher.css">
-      <link rel="stylesheet" href="./css/knowledge.css">
   </head>
   
   <body style="padding-top: 70px">
+
   <jsp:include page="toolbar.jsp"></jsp:include>
+
+
   <!--获取对应班级的所有学生selectUserByClass-->
   <%
       User user =(User)session.getAttribute("user");
       List<User> userList= DaoFactory.getUserService().selectUserByClassAndKind(user.getUid(),1);
       List<List<Test>> allUserTests = new ArrayList<>();
-      List<List<TestContent>> userTestsTid = new ArrayList<>();
-      List<Problem> userTestContentPid = new ArrayList<>();
 
       //获取每个人的测试，并装入list
       for(int i = 0;i < userList.size();i++) {
@@ -50,19 +50,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
       }
   %>
   <div class="row">
-      <ul class="nav nav-tabs col-md-6 col-md-offset-3" id="myTab">
-          <li class="active">
-              <a data-toggle="tab" href="#content1">按班级查看</a>
-          </li>
-          <li>
-              <a data-toggle="tab" href="#content2">按章节查看</a>
-          </li>
-      </ul>
-      <div class="col-md-6 col-md-offset-3 tab-content">
-          <!--按班级查看-->
-          <div class="tab-pane fade in active" id="content1">
+      <div class="col-md-6 col-md-offset-3">
               <!-- 显示班级所有学生 -->
-              <div class="panel panel-primary" style="margin-top: 40px">
+          <div class="panel panel-primary" style="margin-top: 40px">
 
                   <div class="panel-heading text-center panel-heading-style">
                       班级学生
@@ -78,6 +68,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                           <th>学号</th>
                           <th>姓名</th>
                           <th>班级</th>
+                          <th>测试次数</th>
                           <th>平均成绩</th>
                       </tr>
                       <% for (int i=0;i<userList.size();i++) {
@@ -86,7 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                       <tr>
                           <td><%=userList.get(i).getUid()%></td>
                           <td>
-                              <a href="#<%=userList.get(i).getName()%>" data-toggle="tab">
+                              <a href="#<%=userList.get(i).getUid()%>" data-toggle="tab">
                                   <%=userList.get(i).getName()%>
                               </a>
                           </td>
@@ -95,6 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
                               sum = allUserTests.get(i).get(j).getScore() + sum;
                           }%>
+                          <td><%=allUserTests.get(i).size()%></td>
                           <td><%=sum/allUserTests.get(i).size()%></td>
                       </tr>
                       <% }                                       %>
@@ -103,10 +95,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
               </div>
               <!--左下各人总体正确率-->
-              <div class="col-md-6" style="margin-top:40px">
+          <div class="col-md-12" style="margin-top:40px">
                       <div class="panel panel-info">
                           <div class="panel-heading text-left">
-                              <h3>各人总体正确率:</h3>
+                              <h3>总体正确率:</h3>
                           </div>
                           <div class="panel-body">
                               <ul class="progress-ul">
@@ -126,7 +118,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                       for(int i = 0;i < userList.size();i++)
                                       {
                                           int sum = 0;
-                                          //List<Problem> userProblem = new ArrayList<>();
                                           List<Test> userTest = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
                                           for(int j = 0;j < userTest.size();j++)
                                           {
@@ -151,173 +142,127 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                           </div>
                                       </div>
                                   </li>
-
                                   <%
                                   }%>
                               </ul>
                           </div>
                       </div>
+              </div>
+              <!--统计图-->
+          <div class="col-md-12">
+              <div class="tab-content"  style="margin-top: 40px">
+                  <%for(int i = 0;i < userList.size();i++){%>
+                  <!--<%
+                      /*int sum = 0;
+                      List<Test> userTest = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
+                      for (int j = 0; j < userTest.size(); j++) {
+                          List<TestContent> userTestContent = DaoFactory.getTestContentService().selectTestContentByTid(userTest.get(j).getTid());
+                          for (int m = 0; m < userTestContent.size(); m++) {
+                              Problem problem = DaoFactory.getProblemService().selectProblemByPid(userTestContent.get(m).getPid());
+                              if (problem.getTrue_option() == userTestContent.get(m).getYour_option()) {
+                                  sum++;
+                              }
+                          }
+                      }*/
+                  %>-->
+                  <div class="tab-pane fade" id="<%=userList.get(i).getUid()%>" style="height: 400px">
+                      <div class="panel panel-success">
+                          <div class="panel-heading">
+                              <h3><%=userList.get(i).getName()%>的做题情况</h3>
+                          </div>
+                          <div class="panel-body">
+                              <div id="allStatues<%=userList.get(i).getUid()%>"
+                                   style="height: 300px; margin-left: 10px;">
+                              </div>
+                          </div>
+                      </div>
                   </div>
-              <!--右下扇形统计图-->
-              <div class="col-md-6 tab-content"  style="margin-top: 40px">
-                      <%for(int i = 0;i < userList.size();i++){%>
-                      <div class="tab-pane fade" id="<%=userList.get(i).getName()%>">
-                          <div class="panel panel-danger">
-                          <%
-                                  int sum = 0;
-                                  List<Test> userTest = DaoFactory.getTestSerivce().selectTestByUid(userList.get(i).getUid());
-                                  for (int j = 0; j < userTest.size(); j++) {
-                                      List<TestContent> userTestContent = DaoFactory.getTestContentService().selectTestContentByTid(userTest.get(j).getTid());
-                                      for (int m = 0; m < userTestContent.size(); m++) {
-                                          Problem problem = DaoFactory.getProblemService().selectProblemByPid(userTestContent.get(m).getPid());
-                                          if (problem.getTrue_option() == userTestContent.get(m).getYour_option()) {
-                                              sum++;
+                  <script type="text/javascript">
+                      require.config({
+                          paths: {
+                              echarts: 'http://echarts.baidu.com/build/dist'
+                          }
+                      });
+                      require(
+                          [
+                              'echarts/chart/bar',
+                          ],
+                          function (ec) {
+                              var myChartAllStatus<%=userList.get(i).getUid()%> = ec.init(document
+                                  .getElementById('allStatues<%=userList.get(i).getUid()%>'));
+                              option<%=userList.get(i).getUid()%> = {
+                                  title: {
+                                      text: '某学生的正确量和错误量',
+                                      subtext: '纯属虚构'
+                                  },
+                                  tooltip: {
+                                      trigger: 'axis'
+                                  },
+                                  legend: {
+                                      data: ['正确量', '错误量']
+                                  },
+                                  toolbox: {
+                                      show: true,
+                                      feature: {
+                                          mark: {show: true},
+                                          dataView: {show: true, readOnly: false},
+                                          magicType: {show: true, type: ['line', 'bar']},
+                                          restore: {show: true},
+                                          saveAsImage: {show: true}
+                                      }
+                                  },
+                                  calculable: true,
+                                  xAxis: [
+                                      {
+                                          type: 'category',
+                                          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                                      }
+                                  ],
+                                  yAxis: [
+                                      {}
+                                  ],
+                                  series: [
+                                      {
+                                          name: '正确量',
+                                          type: 'bar',
+                                          data: [2, 4, 7, 2, 9, 7, 5, 6, 3, 2, 8, 6],
+                                          markPoint: {
+                                              data: [
+                                                  {type: 'max', name: '最大值'},
+                                                  {type: 'min', name: '最小值'}
+                                              ]
+                                          },
+                                          markLine: {
+                                              data: [
+                                                  {type: 'average', name: '平均值'}
+                                              ]
+                                          }
+                                      },
+                                      {
+                                          name: '错误量',
+                                          type: 'bar',
+                                          data: [8, 6, 3, 8, 1, 3, 5, 4, 7, 8, 2, 4],
+                                          markPoint: {
+                                              data: [
+                                                  {name: '年最高', value: 9, xAxis: 4, yAxis: 9,},
+                                                  {name: '年最低', value: 2, xAxis: 0, yAxis: 2}
+                                              ]
+                                          },
+                                          markLine: {
+                                              data: [
+                                                  {type: 'average', name: '平均值'}
+                                              ]
                                           }
                                       }
-                                  }
-                          %>
-                              <div class="panel-heading text-center">
-                                  <h3><%=userList.get(i).getName()%>做题统计</h3>
-                              </div>
-                              <div class="panel-body tab-pane fade" style="padding-top: 15px">
-                                  <div class="" id="<%=userList.get(i).getUid()%>" style="height: 300px; margin-left: 10px">
-                                  </div>
-                                  <script type="text/javascript">
-                                      var <%="myChartAllStatus"+ userList.get(i).getUid() %> = echarts.init(document
-                                          .getElementById('<%=userList.get(i).getUid()%>'));
-                                      <%="option"+userList.get(i).getUid()%>={
-                                          title: {
-                                              text: '测试题目<%=(userTest.size())*10%>道',
-                                              left: 'center'
-                                          },
-                                          tooltip : {
-                                              trigger : 'item',
-                                              formatter : "{a} <br/>{b} : {c} ({d}%)"
-                                          },
-                                          legend : {
-                                              orient : 'vertical',
-                                              left : 'left',
-                                              data : [ '正确', '错误' ]
-                                          },
-                                          series : [ {
-                                              name : '测试整体正确率',
-                                              type : 'pie',
-                                              radius : [ '50%', '70%' ],
-                                              avoidLabelOverlap : false,
-                                              label : {
-                                                  normal : {
-                                                      show : false,
-                                                      position : 'center'
-                                                  },
-                                                  emphasis : {
-                                                      show : true,
-                                                      textStyle : {
-                                                          fontSize : '30',
-                                                          fontWeight : 'bold'
-                                                      }
-                                                  }
-                                              },
-                                              labelLine : {
-                                                  normal : {
-                                                      show : false
-                                                  }
-                                              },
-                                              data : [ {
-                                                  value : <%=sum%>,
-                                                  name : '正确'
-                                              } ,{
-                                                  value: <%=userTest.size()*10-sum%>,
-                                                  name:'错误'
-                                              }]
-                                          } ]
-                                      };
-                                      <%="myChartAllStatus"+ userList.get(i).getUid()%>.setOption(<%="option" + userList.get(i).getUid()%>);
-                                  </script>
-                              </div>
-                          </div>
-
-                      </div>
-
+                                  ]
+                              };
+                              myChartAllStatus<%=userList.get(i).getUid()%>.setOption(option<%=userList.get(i).getUid()%>);
+                          });
+                  </script>
                   <%}%>
               </div>
-
           </div>
-          <!--按章节查看-->
-          <%
-              List<Knowledge> knowledges = DaoFactory.getKnowledgeService().selectAllKnowledge();
-          %>
-          <div class="tab-pane fade" id="content2">
-              <div>
-                  <div class="col-md-3 " style="background-color: #2aabd2">
-                      <%for(int i = 1;i < knowledges.size();i++){
 
-                      %>
-                      <div class="panel panel-default" style="margin-bottom: 0">
-                          <% if(knowledges.get(i).getSection()==0){%>
-                          <div class="panel-heading">
-                              <h4 class="panel-title">
-
-                                  <a data-toggle="collapse" data-parent="#accordion"
-                                     href="#<%=knowledges.get(i).getChapter()%>.<%=knowledges.get(i).getSection()%>" style="text-decoration: none">
-                                      <%=knowledges.get(i).getTitle()%>
-                                  </a>
-                                  <%}%>
-                              </h4>
-                          </div>
-                          <div id="<%=knowledges.get(i).getChapter()%>.<%=knowledges.get(i).getSection()%>" class="panel-collapse collapse">
-
-                              <div class="panel-body">
-                                  <div class="col-md-12">
-                                      <ul style="border: none">
-                                          <%  if(knowledges.get(i).getSection()>0){%>
-                                          <li class="list-group-item" style="border: none">
-                                              <%=knowledges.get(i).getTitle()%>
-                                          </li>
-                                          <%}%>
-                                      </ul>
-                                  </div>
-                              </div>
-
-                          </div>
-                      </div>
-                      <%}%>
-                  </div>
-              </div>
-
-
-              <!--右侧表格显示学生信息-->
-              <div class="col-md-8">
-                  <div class="panel panel-primary">
-                      <!-- Default panel contents -->
-                      <div class="panel-heading text-center panel-heading-style">学生测试情况</div>
-                      <div class="panel-body">
-                          <p>暂时没有学生完成该章节测试</p>
-                      </div>
-
-                      <!-- Table -->
-                      <table class="table">
-                          <tr>
-                              <th>学号</th>
-                              <th>姓名</th>
-                              <th>测试次数</th>
-                              <th>测试成绩</th>
-                          </tr>
-                          <tr>
-                              <td>1407064252</td>
-                              <td>胖虎</td>
-                              <td>2</td>
-                              <td>10</td>
-                          </tr>
-                          <tr>
-                              <td>1407064249</td>
-                              <td>静香</td>
-                              <td>2</td>
-                              <td>10</td>
-                          </tr>
-                      </table>
-                  </div>
-              </div>
-          </div>
       </div>
   </div>
   </body>

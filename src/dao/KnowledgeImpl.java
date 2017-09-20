@@ -37,6 +37,22 @@ public class KnowledgeImpl implements KnowledgeDao {
 	}
 
 	@Override
+	public ArrayList<Knowledge> selectSectionIsZero() throws Exception {
+		ArrayList<Knowledge> list = new ArrayList<>();
+		String sql = "select * from knowledge where section = 0";
+		pstmt = conn.prepareStatement(sql);
+		ResultSet rs = pstmt.executeQuery();
+		while(rs.next()){
+			int kid = rs.getInt("kid");
+			int chapter = rs.getInt("chapter");
+			String title = rs.getString("title");
+			String details = rs.getString("details");
+			list.add(new Knowledge(kid, chapter, 0, title, details));
+		}
+		return list;
+	}
+
+	@Override
 	public Knowledge selectKnowledge(int kid) throws Exception {
 		// TODO Auto-generated method stub
 		return null;

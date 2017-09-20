@@ -7,6 +7,8 @@ import bean.Knowledge;
 public interface KnowledgeDao {
 	
 	public ArrayList<Knowledge> selectAllKnowledge() throws Exception;
+
+	public ArrayList<Knowledge> selectSectionIsZero() throws Exception;
 	
 	public Knowledge selectKnowledge(int kid) throws Exception;
 	
